@@ -182,6 +182,13 @@ canvas{width:100%;height:100%;display:block;touch-action:manipulation}
   </section>
 </div>
 
+<div class="veil" id="capveil"><div class="sheet" role="dialog" aria-modal="true" style="align-items:center;text-align:center">
+  <span id="cap-dot" style="width:34px;height:34px;border-radius:50%;border:3px solid #2b1b0d"></span>
+  <h2 data-t="cap_title"></h2><div id="cap-text" class="note"></div>
+  <button class="btn" id="cap-yes" style="background:var(--red);width:100%"><span data-t="cap_yes"></span></button>
+  <button class="btn alt" id="cap-no" style="width:100%"><span data-t="cap_no"></span></button>
+</div></div>
+
 <div class="veil" id="veil"><div class="sheet" role="dialog" aria-modal="true">
   <h2 data-t="results"></h2><div id="ranks" style="display:flex;flex-direction:column;gap:10px"></div>
   <button class="btn" id="again"><span data-t="play_again"></span></button>
@@ -192,19 +199,19 @@ canvas{width:100%;height:100%;display:block;touch-action:manipulation}
 /* ---------------- i18n ---------------- */
 var I18N={
  en:{play_solo:"Solo vs AI",play_group:"Group on one device",play_friends:"Play with friends online",settings:"Settings",profile:"Profile",
-  players_count:"Number of players",n_players:"{n} players",start:"Start",you:"You",bot:"Bot {n}",player:"Player {n}",turn_of:"{name}'s turn",tap:"Tap a glowing pawn",nomove:"No move possible",
+  players_count:"Number of players",n_players:"{n} players",start:"Start",you:"You",bot:"Bot {n}",player:"Player {n}",turn_of:"{name}'s turn",tap:"Tap a glowing pawn",nomove:"No move possible",cap_title:"Capture?",cap_text:"You can send {name}'s pawn back to base.",cap_yes:"Yes, capture",cap_no:"No, spare it",
   results:"Results",place:"#{n}",play_again:"Play again",home:"Home",language:"Language",lang_system:"System",theme:"Theme",t_auto:"Auto",t_light:"Light",t_dark:"Dark",
   sound:"Sound effects",wins:"Wins",losses:"Losses",level:"Level {n}",points:"{n} pts",
   online_note:"Online rooms, friends, chat and the leaderboard need the Firebase backend, so they are part of the Android project and are not in this version. Solo and group games here use the same rules and board.",
   saved_note:"Your wins, losses and points are saved in this browser only."},
  ar:{play_solo:"لعب فردي ضد الذكاء الاصطناعي",play_group:"لعب جماعي على نفس الجهاز",play_friends:"اللعب مع الأصدقاء عبر الإنترنت",settings:"الإعدادات",profile:"الملف الشخصي",
-  players_count:"عدد اللاعبين",n_players:"{n} لاعبين",start:"ابدأ",you:"أنت",bot:"روبوت {n}",player:"لاعب {n}",turn_of:"دور {name}",tap:"اضغط على بيدق مضيء",nomove:"لا توجد حركة ممكنة",
+  players_count:"عدد اللاعبين",n_players:"{n} لاعبين",start:"ابدأ",you:"أنت",bot:"روبوت {n}",player:"لاعب {n}",turn_of:"دور {name}",tap:"اضغط على بيدق مضيء",nomove:"لا توجد حركة ممكنة",cap_title:"هل تأسر البيدق؟",cap_text:"يمكنك إعادة بيدق {name} إلى قاعدته.",cap_yes:"نعم، أسره",cap_no:"لا، أبقِه",
   results:"النتائج",place:"المركز {n}",play_again:"العب مجددًا",home:"الرئيسية",language:"اللغة",lang_system:"النظام",theme:"المظهر",t_auto:"تلقائي",t_light:"نهاري",t_dark:"ليلي",
   sound:"المؤثرات الصوتية",wins:"الانتصارات",losses:"الهزائم",level:"المستوى {n}",points:"{n} نقطة",
   online_note:"الغرف الخاصة والأصدقاء والمحادثة والمتصدرون تحتاج خادم Firebase، لذلك هي في مشروع Android وليست في هذه النسخة. اللعب الفردي والجماعي هنا يستخدم نفس القواعد ونفس اللوحة.",
   saved_note:"تُحفظ انتصاراتك وهزائمك ونقاطك في هذا المتصفح فقط."},
  fr:{play_solo:"Solo contre l'IA",play_group:"Groupe sur un appareil",play_friends:"Jouer avec des amis en ligne",settings:"Paramètres",profile:"Profil",
-  players_count:"Nombre de joueurs",n_players:"{n} joueurs",start:"Commencer",you:"Vous",bot:"Robot {n}",player:"Joueur {n}",turn_of:"Tour de {name}",tap:"Touchez un pion lumineux",nomove:"Aucun coup possible",
+  players_count:"Nombre de joueurs",n_players:"{n} joueurs",start:"Commencer",you:"Vous",bot:"Robot {n}",player:"Joueur {n}",turn_of:"Tour de {name}",tap:"Touchez un pion lumineux",nomove:"Aucun coup possible",cap_title:"Capturer ?",cap_text:"Vous pouvez renvoyer le pion de {name} à sa base.",cap_yes:"Oui, capturer",cap_no:"Non, l'épargner",
   results:"Résultats",place:"n°{n}",play_again:"Rejouer",home:"Accueil",language:"Langue",lang_system:"Système",theme:"Thème",t_auto:"Auto",t_light:"Clair",t_dark:"Sombre",
   sound:"Effets sonores",wins:"Victoires",losses:"Défaites",level:"Niveau {n}",points:"{n} pts",
   online_note:"Les salons en ligne, les amis, le chat et le classement nécessitent le backend Firebase : ils font partie du projet Android et ne sont pas dans cette version. Les parties solo et en groupe utilisent ici les mêmes règles et le même plateau.",
@@ -225,11 +232,11 @@ function movable(g){if(!g.dice||g.winners.length>=g.seats.length)return[];var r=
 function nextTurn(g,from){var t0=from;for(var k=0;k<g.seats.length;k++){t0=(t0+1)%g.seats.length;if(g.winners.indexOf(t0)<0)return t0}return from}
 function clone(g){return{seats:g.seats,pieces:g.pieces.map(function(a){return a.slice()}),turn:g.turn,dice:g.dice,shown:g.shown,winners:g.winners.slice()}}
 function rolled(g,v){var s=clone(g);s.dice=v;s.shown=v;if(!movable(s).length){s.dice=0;s.turn=nextTurn(s,s.turn)}return s}
-function move(g,idx){
+function move(g,idx,spare){
   if(movable(g).indexOf(idx)<0)return g;
   var s=clone(g),me=s.turn,d=s.dice,old=s.pieces[me][idx],nw=old==-1?0:old+d,cap=false;
   s.pieces[me][idx]=nw;
-  if(nw>=0&&nw<=LAST&&SAFE.indexOf(absOf(s,me,nw))<0){
+  if(!spare&&nw>=0&&nw<=LAST&&SAFE.indexOf(absOf(s,me,nw))<0){
     var a=absOf(s,me,nw);
     for(var q=0;q<s.seats.length;q++){if(q==me)continue;
       for(var j=0;j<4;j++){var pq=s.pieces[q][j];if(pq>=0&&pq<=LAST&&absOf(s,q,pq)==a){s.pieces[q][j]=-1;cap=true}}}
@@ -242,6 +249,15 @@ function move(g,idx){
   s.turn=extra?me:nextTurn(s,me);return s;
 }
 function baseCount(g,except){var c=0;g.pieces.forEach(function(a,p){if(p!=except)a.forEach(function(x){if(x==-1)c++})});return c}
+/* players whose pawns this move would capture (empty when none, or on a safe square) */
+function victims(g,idx){
+  var me=g.turn,old=g.pieces[me][idx],nw=old==-1?0:old+g.dice,out=[];
+  if(nw<0||nw>LAST||SAFE.indexOf(absOf(g,me,nw))>=0)return out;
+  var a=absOf(g,me,nw);
+  for(var q=0;q<g.seats.length;q++){if(q==me)continue;
+    for(var j=0;j<4;j++){var pq=g.pieces[q][j];if(pq>=0&&pq<=LAST&&absOf(g,q,pq)==a&&out.indexOf(q)<0)out.push(q)}}
+  return out;
+}
 function aiChoose(g){
   var opts=movable(g),best=opts[0],bs=-1e9;
   opts.forEach(function(i){
@@ -291,6 +307,7 @@ var sfx={
   capture:function(){osc("sawtooth",520,70,.35,.2);click(300,.6,0,.12);osc("sine",110,50,.25,.3,.05)},
   ui:function(){click(1800,.25,0,.03);osc("sine",600,0,.05,.08)},
   nomove:function(){osc("square",200,150,.18,.07)},
+  spare:function(){osc("sine",660,0,.2,.14);osc("sine",880,0,.3,.12,.1)},
   win:function(){[523,659,784,1046,1319].forEach(function(f,i){osc("triangle",f,0,.4,.18,i*.14)});osc("sine",262,0,1,.18,0);osc("triangle",1046,0,.9,.16,.75);osc("triangle",1319,0,1.1,.16,.75)}
 };
 function buzz(n){try{navigator.vibrate&&navigator.vibrate(n)}catch(e){}}
@@ -340,7 +357,7 @@ function showFace(v){for(var i=0;i<9;i++)die.children[i].className=(PIPS[v]||[])
 function syncD(){D=G.pieces.map(function(a){return a.slice()})}
 
 function startGame(m,n){
-  session++;busy=false;rollingNow=false;G=newGame(n);syncD();ai={};names=[];hopAt={};tw={};
+  session++;busy=false;rollingNow=false;asking=false;$("capveil").classList.remove("on");G=newGame(n);syncD();ai={};names=[];hopAt={};tw={};
   for(var i=0;i<n;i++){
     if(m=="solo"){names.push(i==0?t("you"):t("bot",{n:i}));if(i>0)ai[i]=true}
     else names.push(t("player",{n:i+1}));
@@ -348,7 +365,7 @@ function startGame(m,n){
   $("players").style.setProperty("--n",n);$("veil").classList.remove("on");recorded=false;
   show("game");resize();renderHud();showFace(0);next();
 }
-function endSession(){session++;busy=false;rollingNow=false;$("veil").classList.remove("on")}
+function endSession(){session++;busy=false;rollingNow=false;asking=false;$("veil").classList.remove("on");$("capveil").classList.remove("on")}
 $("quit").onclick=function(){sfx.ui();endSession();show("home")};
 $("tohome").onclick=function(){sfx.ui();endSession();show("home")};
 $("again").onclick=function(){sfx.ui();startGame(mode,count)};
@@ -385,9 +402,9 @@ function doRoll(){
 die.onclick=function(){if(G&&!ai[G.turn])doRoll()};
 
 /* move a pawn one square at a time */
-function doMove(idx){
+function doMove(idx,spare){
   if(!G||busy||movable(G).indexOf(idx)<0)return;
-  busy=true;var my=session,me=G.turn,old=G.pieces[me][idx],ng=move(G,idx),nw=ng.pieces[me][idx],steps=[];
+  busy=true;var my=session,me=G.turn,old=G.pieces[me][idx],ng=move(G,idx,spare),nw=ng.pieces[me][idx],steps=[];
   if(old==-1)steps=[0];else for(var p=old+1;p<=nw;p++)steps.push(p);
   var i=0;renderHud();
   (function stepFn(){
@@ -406,6 +423,20 @@ function doMove(idx){
     renderHud();next();
   }
 }
+/* a human move that would capture asks first: capture or spare */
+var asking=false;
+function choose(idx){
+  if(!G||busy||asking||movable(G).indexOf(idx)<0)return;
+  var v=victims(G,idx);
+  if(ai[G.turn]||!v.length){doMove(idx);return}
+  asking=true;sfx.ui();
+  $("cap-dot").style.background=COL[G.seats[v[0]]];
+  $("cap-text").textContent=t("cap_text",{name:v.map(function(p){return names[p]}).join(" / ")});
+  $("capveil").classList.add("on");
+  function close(spare){asking=false;$("capveil").classList.remove("on");if(spare)sfx.spare();doMove(idx,spare)}
+  $("cap-yes").onclick=function(){close(false)};
+  $("cap-no").onclick=function(){close(true)};
+}
 function next(){
   if(!G||busy)return;var my=session;
   if(G.winners.length>=G.seats.length){setTimeout(function(){if(my===session)finish()},800);return}
@@ -413,7 +444,7 @@ function next(){
   if(G.dice==0){if(isAi)setTimeout(function(){if(my===session)doRoll()},750);return}
   var mv=movable(G);
   if(isAi)setTimeout(function(){if(my===session)doMove(aiChoose(G))},650);
-  else if(mv.length==1)setTimeout(function(){if(my===session)doMove(mv[0])},500);
+  else if(mv.length==1)setTimeout(function(){if(my===session)choose(mv[0])},500);
 }
 function finish(){
   if(!recorded){recorded=true;sfx.win();
@@ -424,10 +455,10 @@ function finish(){
   $("veil").classList.add("on");
 }
 cv.addEventListener("pointerdown",function(e){
-  if(!G||ai[G.turn]||!G.dice||busy)return;
+  if(!G||ai[G.turn]||!G.dice||busy||asking)return;
   var r=cv.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*16-.5,y=(e.clientY-r.top)/r.height*16-.5,best=-1,bd=1.1;
   movable(G).forEach(function(i){var p=posOf(G.seats[G.turn],G.pieces[G.turn][i],i),d=Math.hypot(p[0]-x,p[1]-y);if(d<bd){bd=d;best=i}});
-  if(best>=0)doMove(best);
+  if(best>=0)choose(best);
 });
 
 /* ---------------- drawing ---------------- */
